@@ -59,10 +59,285 @@
 
     <div class="max-w-4xl mx-auto px-4 w-full">
         <div class="relative h-[650px] mb-8">
+            
+            <div class="card-layer active" id="layer-1">
+                <div class="main-card rounded-3xl p-6 md:p-8 h-full flex flex-col">
+                    <div class="text-center mb-6 fade-in-up" data-anim="true">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">今日概览</h2>
+                        <p class="text-gray-500 text-lg" id="overview-date">...</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 flex-1">
+                        <div class="info-block text-center p-4 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.1s;">
+                            <div class="text-orange-500 mx-auto mb-2 text-4xl" id="overview-weather-icon">☀️</div>
+                            <h3 class="font-bold text-gray-800">天气</h3>
+                            <p class="text-xl font-bold text-orange-600" id="overview-temp">--°C</p>
+                        </div>
+                        <div class="info-block text-center p-4 bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.2s;">
+                            <div class="text-purple-500 mx-auto mb-2 text-4xl" id="overview-moon-icon">🌙</div>
+                            <h3 class="font-bold text-gray-800">月相</h3>
+                            <p class="text-xl font-bold text-purple-600" id="overview-moon-phase">...</p>
+                        </div>
+                        <div class="info-block text-center p-4 bg-gradient-to-br from-green-100 to-teal-100 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.3s;">
+                            <div class="text-green-500 mx-auto mb-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L9 9.61l-1.447 1.447a1 1 0 00-1.394 1.432l5.5 5.5a1 1 0 001.432-1.394L11.39 12.5l5.216-2.234a1 1 0 000-1.84l-7-3zM9 13.41l-2.43-2.43 5.48-2.35 2.43 2.43-5.48 2.35z" /></svg></div>
+                            <h3 class="font-bold text-gray-800">生态</h3>
+                            <p class="text-xl font-bold text-green-600" id="overview-ecology-status">活跃期</p>
+                        </div>
+                        <div class="info-block text-center p-4 bg-gradient-to-br from-pink-100 to-red-100 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.4s;">
+                            <div class="text-pink-500 mx-auto mb-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" /></svg></div>
+                            <h3 class="font-bold text-gray-800">健康</h3>
+                            <p class="text-xl font-bold text-pink-600" id="overview-health-status">...</p>
+                        </div>
+                        <div class="info-block text-center p-4 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.5s;">
+                            <div class="text-yellow-500 mx-auto mb-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg></div>
+                            <h3 class="font-bold text-gray-800">作息</h3>
+                            <p class="text-xl font-bold text-yellow-600">规律</p>
+                        </div>
+                        <div class="info-block text-center p-4 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.6s;">
+                            <div class="text-blue-500 mx-auto mb-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg></div>
+                            <h3 class="font-bold text-gray-800">提醒</h3>
+                            <p class="text-xl font-bold text-blue-600" id="overview-advice">...</p>
+                        </div>
+                    </div>
+                    <div class="text-center mt-8 fade-in-up" data-anim="true" style="animation-delay: 0.7s;">
+                        <button class="btn-primary px-8 py-3 rounded-xl font-semibold text-lg shadow-lg" onclick="nextLayer()">查看详细信息 &rarr;</button>
+                    </div>
+                </div>
             </div>
+
+            <div class="card-layer" id="layer-2">
+                <div class="main-card rounded-3xl p-6 md:p-8 h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-6 fade-in-up flex-shrink-0" data-anim="true">
+                        <h2 class="text-3xl font-bold text-gray-800">天气详情</h2>
+                        <div class="bg-orange-400 p-3 rounded-2xl text-white shadow-lg text-4xl" id="details-weather-icon">☀️</div>
+                    </div>
+                    <div class="flex-1 overflow-y-auto">
+                        <div class="grid md:grid-cols-2 gap-8 mb-6 fade-in-up" data-anim="true" style="animation-delay: 0.1s;">
+                            <div>
+                                <div class="text-center mb-6">
+                                    <div class="text-6xl font-bold text-orange-600" id="details-temp">--°C</div>
+                                    <p class="text-xl text-gray-500" id="details-feels-like">体感 --°C</p>
+                                    <p class="text-lg text-gray-800 capitalize" id="details-desc">正在加载天气...</p>
+                                </div>
+                                <div class="space-y-4 text-sm">
+                                    <div class="flex justify-between items-center"><span class="text-gray-600">湿度</span><span class="font-bold" id="details-humidity">-- %</span></div>
+                                    <div class="flex justify-between items-center"><span class="text-gray-600">风速</span><span class="font-bold" id="details-wind">-- m/s</span></div>
+                                    <div class="flex justify-between items-center"><span class="text-gray-600">气压</span><span class="font-bold" id="details-pressure">-- hPa</span></div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">未来24小时预报</h3>
+                                <div class="bg-orange-50 p-4 rounded-2xl" id="weather-chart-container"><p class="text-center text-gray-500">正在加载预报...</p></div>
+                            </div>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.2s;">
+                            <h3 class="font-bold text-red-800 mb-3 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.636-1.214 2.852-1.214 3.488 0l6.093 11.624c.636 1.214-.472 2.777-1.744 2.777H3.908c-1.272 0-2.38-1.563-1.744-2.777L8.257 3.099zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>天气提醒</h3>
+                            <div id="weather-advice-list" class="text-red-700 text-sm">正在根据实时天气生成建议...</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center gap-4 mt-6 flex-shrink-0 fade-in-up" data-anim="true" style="animation-delay: 0.3s;">
+                        <button class="btn-secondary px-8 py-3 rounded-xl font-semibold text-lg" onclick="prevLayer()">&larr; 上一层</button>
+                        <button class="btn-primary px-8 py-3 rounded-xl font-semibold text-lg shadow-lg" onclick="nextLayer()">下一层 &rarr;</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-layer" id="layer-3">
+                 <div class="main-card rounded-3xl p-6 md:p-8 h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-6 fade-in-up flex-shrink-0" data-anim="true">
+                        <h2 class="text-3xl font-bold text-gray-800">月相详情</h2>
+                        <div class="bg-indigo-500 p-3 rounded-2xl text-white shadow-lg text-4xl" id="details-moon-icon">🌙</div>
+                    </div>
+                    <div class="flex-1 overflow-y-auto">
+                        <div class="grid md:grid-cols-2 gap-8 mb-6 fade-in-up" data-anim="true" style="animation-delay: 0.1s;">
+                            <div class="text-center">
+                                <div class="relative w-40 h-40 mx-auto mb-4 text-8xl flex items-center justify-center" id="moon-visual">...</div>
+                                <div class="bg-indigo-50 p-4 rounded-xl">
+                                    <p class="text-2xl font-bold text-indigo-600" id="moon-phase-name">...</p>
+                                    <p class="text-gray-500" id="moon-illumination">-- % 被照亮</p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">关键时间</h3>
+                                <div class="flex justify-between items-center p-3 bg-blue-50 rounded-xl"><span class="flex items-center gap-2">🌅 日出</span> <span class="font-bold text-blue-600" id="sunrise-time">--:--</span></div>
+                                <div class="flex justify-between items-center p-3 bg-orange-50 rounded-xl"><span class="flex items-center gap-2">🌇 日落</span> <span class="font-bold text-orange-600" id="sunset-time">--:--</span></div>
+                                <div class="flex justify-between items-center p-3 bg-indigo-50 rounded-xl"><span class="flex items-center gap-2">🌔 月出</span> <span class="font-bold text-indigo-600" id="moonrise-time">--:--</span></div>
+                                <div class="flex justify-between items-center p-3 bg-gray-100 rounded-xl"><span class="flex items-center gap-2">🌘 月落</span> <span class="font-bold text-gray-600" id="moonset-time">--:--</span></div>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.2s;">
+                            <h3 class="font-bold text-purple-800 mb-3 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M11.983 1.904a1 1 0 00-1.966 0l-1.34 4.143a1 1 0 01-.95.69h-4.354a1 1 0 00-.75 1.68l3.522 2.56-1.34 4.143a1 1 0 001.512 1.103l3.522-2.56 3.522 2.56a1 1 0 001.512-1.102l-1.34-4.143 3.522-2.56a1 1 0 00-.75-1.68h-4.354a1 1 0 01-.95-.69L11.983 1.904z" /></svg>月相对生态的影响</h3>
+                            <ul class="text-sm text-purple-700 space-y-1 list-disc list-inside" id="moon-ecology-impact">
+                               <li>正在根据当前时间和月相生成建议...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center gap-4 mt-6 flex-shrink-0 fade-in-up" data-anim="true" style="animation-delay: 0.3s;">
+                        <button class="btn-secondary px-8 py-3 rounded-xl font-semibold text-lg" onclick="prevLayer()">&larr; 上一层</button>
+                        <button class="btn-primary px-8 py-3 rounded-xl font-semibold text-lg shadow-lg" onclick="nextLayer()">下一层 &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-layer" id="layer-4">
+                 <div class="main-card rounded-3xl p-6 md:p-8 h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-6 fade-in-up flex-shrink-0" data-anim="true">
+                        <h2 class="text-3xl font-bold text-gray-800">健康指数</h2>
+                        <div class="bg-pink-500 p-3 rounded-2xl text-white shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" /></svg>
+                        </div>
+                    </div>
+                    <div class="flex-1 overflow-y-auto">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center fade-in-up" data-anim="true" style="animation-delay: 0.1s;">
+                            <div class="health-item" id="health-item-exercise" data-value="0" data-color="#10b981">
+                                <div class="relative w-24 h-24 mx-auto mb-2">
+                                    <svg class="w-full h-full transform -rotate-90"><circle cx="48" cy="48" r="40" stroke="#e5e7eb" stroke-width="8" fill="none"/><circle class="progress-circle" cx="48" cy="48" r="40" stroke="#10b981" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/></svg>
+                                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-xl font-bold text-green-600">--%</span></div>
+                                </div>
+                                <h3 class="font-bold text-gray-700 text-sm">运动适宜</h3>
+                            </div>
+                             <div class="health-item" id="health-item-uv" data-value="0" data-color="#f59e0b">
+                                <div class="relative w-24 h-24 mx-auto mb-2">
+                                    <svg class="w-full h-full transform -rotate-90"><circle cx="48" cy="48" r="40" stroke="#e5e7eb" stroke-width="8" fill="none"/><circle class="progress-circle" cx="48" cy="48" r="40" stroke="#f59e0b" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/></svg>
+                                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-xl font-bold text-yellow-500">--%</span></div>
+                                </div>
+                                <h3 class="font-bold text-gray-700 text-sm">紫外线指数</h3>
+                            </div>
+                             <div class="health-item" id="health-item-aqi" data-value="0" data-color="#06b6d4">
+                                <div class="relative w-24 h-24 mx-auto mb-2">
+                                    <svg class="w-full h-full transform -rotate-90"><circle cx="48" cy="48" r="40" stroke="#e5e7eb" stroke-width="8" fill="none"/><circle class="progress-circle" cx="48" cy="48" r="40" stroke="#06b6d4" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/></svg>
+                                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-xl font-bold text-cyan-600">--%</span></div>
+                                </div>
+                                <h3 class="font-bold text-gray-700 text-sm">空气质量</h3>
+                            </div>
+                             <div class="health-item" id="health-item-heat" data-value="0" data-color="#ef4444">
+                                <div class="relative w-24 h-24 mx-auto mb-2">
+                                    <svg class="w-full h-full transform -rotate-90"><circle cx="48" cy="48" r="40" stroke="#e5e7eb" stroke-width="8" fill="none"/><circle class="progress-circle" cx="48" cy="48" r="40" stroke="#ef4444" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"/></svg>
+                                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-xl font-bold text-red-500">--%</span></div>
+                                </div>
+                                <h3 class="font-bold text-gray-700 text-sm">防暑指数</h3>
+                            </div>
+                        </div>
+                        <div class="bg-pink-50 p-4 rounded-2xl fade-in-up" data-anim="true" style="animation-delay: 0.2s;">
+                             <h3 class="font-bold text-pink-800 mb-3 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-1.707 1.707A1 1 0 003 15v1a1 1 0 001 1h12a1 1 0 001-1v-1a1 1 0 00-.293-.707L16 11.586V8a6 6 0 00-6-6zM8.05 16.95A.5.5 0 018 17h4a.5.5 0 01-.05.05A3.001 3.001 0 018.05 16.95z" /></svg>健康提醒</h3>
+                             <div class="grid md:grid-cols-2 gap-4 text-sm text-pink-700" id="health-advice-list">
+                                <p>正在根据实时数据生成健康建议...</p>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center gap-4 mt-6 flex-shrink-0 fade-in-up" data-anim="true" style="animation-delay: 0.3s;">
+                        <button class="btn-secondary px-8 py-3 rounded-xl font-semibold text-lg" onclick="prevLayer()">&larr; 上一层</button>
+                        <button class="btn-primary px-8 py-3 rounded-xl font-semibold text-lg shadow-lg" onclick="nextLayer()">下一层 &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-layer" id="layer-5">
+                 <div class="main-card rounded-3xl p-6 md:p-8 h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-6 fade-in-up flex-shrink-0" data-anim="true">
+                        <h2 class="text-3xl font-bold text-gray-800">生态观察</h2>
+                        <div class="bg-green-500 p-3 rounded-2xl text-white shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                        </div>
+                    </div>
+                    <div class="space-y-4 flex-1 overflow-y-auto fade-in-up" data-anim="true" style="animation-delay: 0.1s;" id="ecology-list">
+                        <div class="text-center text-gray-500">正在从iNaturalist获取本地生态信息...</div>
+                    </div>
+                    <div class="flex justify-center items-center gap-4 mt-6 flex-shrink-0 fade-in-up" data-anim="true" style="animation-delay: 0.2s;">
+                        <button class="btn-secondary px-8 py-3 rounded-xl font-semibold text-lg" onclick="prevLayer()">&larr; 上一层</button>
+                        <button class="btn-primary px-8 py-3 rounded-xl font-semibold text-lg shadow-lg" onclick="nextLayer()">下一层 &rarr;</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-layer" id="layer-6">
+                <div class="main-card rounded-3xl p-6 md:p-8 h-full flex flex-col">
+                     <div class="flex items-center justify-between mb-6 fade-in-up flex-shrink-0" data-anim="true">
+                        <h2 class="text-3xl font-bold text-gray-800">生活建议</h2>
+                        <div class="bg-cyan-500 p-3 rounded-2xl text-white shadow-lg">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" /></svg>
+                        </div>
+                    </div>
+                    <div class="space-y-4 flex-1 overflow-y-auto fade-in-up" data-anim="true" style="animation-delay: 0.1s;">
+                        <div class="bg-cyan-50 p-4 rounded-xl">
+                            <h3 class="font-bold text-cyan-800 mb-2">居家生活</h3>
+                            <ul class="text-sm text-cyan-700 space-y-1 list-disc list-inside">
+                                <li>**防潮通风**: 早晚开窗，利用空调除湿，防止衣物发霉。</li>
+                                <li>**驱蚊防虫**: 检查纱窗，使用天然驱蚊剂，清理积水。</li>
+                            </ul>
+                        </div>
+                        <div class="bg-teal-50 p-4 rounded-xl">
+                            <h3 class="font-bold text-teal-800 mb-2">饮食养生</h3>
+                            <ul class="text-sm text-teal-700 space-y-1 list-disc list-inside" id="diet-advice">
+                                <li>正在根据天气生成建议...</li>
+                            </ul>
+                        </div>
+                         <div class="bg-amber-50 p-4 rounded-xl">
+                            <h3 class="font-bold text-amber-800 mb-2">户外活动</h3>
+                            <ul class="text-sm text-amber-700 space-y-1 list-disc list-inside" id="outdoor-advice">
+                                 <li>正在根据天气生成建议...</li>
+                            </ul>
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-xl">
+                            <h3 class="font-bold text-indigo-800 mb-2">中医养生提示</h3>
+                            <ul class="text-sm text-indigo-700 space-y-1 list-disc list-inside" id="health-advice">
+                                 <li>正在根据节气与数据生成建议...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center gap-4 mt-6 flex-shrink-0 fade-in-up" data-anim="true" style="animation-delay: 0.2s;">
+                        <button class="btn-secondary px-8 py-3 rounded-xl font-semibold text-lg" onclick="prevLayer()">&larr; 上一层</button>
+                        <button class="btn-primary px-8 py-3 rounded-xl font-semibold text-lg shadow-lg" onclick="nextLayer()">下一层 &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-layer" id="layer-7">
+                <div class="main-card rounded-3xl p-6 md:p-8 h-full flex flex-col">
+                   <div class="flex items-center justify-between mb-6 fade-in-up flex-shrink-0" data-anim="true">
+                       <h2 class="text-3xl font-bold text-gray-800">金融动态 (股票)</h2>
+                       <div class="bg-yellow-500 p-3 rounded-2xl text-white shadow-lg">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" /></svg>
+                       </div>
+                   </div>
+                   <div class="flex-1 overflow-y-auto space-y-4 fade-in-up" data-anim="true" style="animation-delay: 0.1s;" id="finance-stock-list">
+                       <p class="text-center text-gray-500">正在加载股票数据...</p>
+                   </div>
+                   <div class="flex justify-center items-center gap-4 mt-6 flex-shrink-0 fade-in-up" data-anim="true" style="animation-delay: 0.2s;">
+                       <button class="btn-secondary px-8 py-3 rounded-xl font-semibold text-lg" onclick="prevLayer()">&larr; 上一层</button>
+                       <button class="btn-primary px-8 py-3 rounded-xl font-semibold text-lg shadow-lg" onclick="nextLayer()">加密货币 &rarr;</button>
+                   </div>
+               </div>
+            </div>
+
+            <div class="card-layer" id="layer-8">
+                <div class="main-card rounded-3xl p-6 md:p-8 h-full flex flex-col">
+                    <div class="flex items-center justify-between mb-6 fade-in-up flex-shrink-0" data-anim="true">
+                       <h2 class="text-3xl font-bold text-gray-800">加密货币</h2>
+                       <div class="bg-purple-500 p-3 rounded-2xl text-white shadow-lg">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 10v-1m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m0 10c-1.11 0-2.08-.402-2.599-1M12 16V5.5A2.5 2.5 0 009.5 3h-1A2.5 2.5 0 006 5.5V16m12-2.5a2.5 2.5 0 01-2.5 2.5h-1a2.5 2.5 0 01-2.5-2.5V5.5A2.5 2.5 0 0113.5 3h1a2.5 2.5 0 012.5 2.5V13.5z" /></svg>
+                       </div>
+                   </div>
+                   <div class="flex-1 overflow-y-auto space-y-4 fade-in-up" data-anim="true" style="animation-delay: 0.1s;" id="crypto-list">
+                       <p class="text-center text-gray-500">正在加载加密货币数据...</p>
+                   </div>
+                   <div class="flex justify-center items-center gap-4 mt-6 flex-shrink-0 fade-in-up" data-anim="true" style="animation-delay: 0.2s;">
+                       <button class="btn-secondary px-8 py-3 rounded-xl font-semibold text-lg" onclick="prevLayer()">&larr; 上一层</button>
+                       <button class="btn-primary px-8 py-3 rounded-xl font-semibold text-lg shadow-lg" onclick="goToLayer(1)">返回概览 ↻</button>
+                   </div>
+               </div>
+            </div>
+        </div>
         
         <div class="flex justify-center space-x-4 mb-8">
-            </div>
+            <div class="nav-dot active" data-layer="1" onclick="goToLayer(1)"></div>
+            <div class="nav-dot" data-layer="2" onclick="goToLayer(2)"></div>
+            <div class="nav-dot" data-layer="3" onclick="goToLayer(3)"></div>
+            <div class="nav-dot" data-layer="4" onclick="goToLayer(4)"></div>
+            <div class="nav-dot" data-layer="5" onclick="goToLayer(5)"></div>
+            <div class="nav-dot" data-layer="6" onclick="goToLayer(6)"></div>
+            <div class="nav-dot" data-layer="7" onclick="goToLayer(7)"></div>
+            <div class="nav-dot" data-layer="8" onclick="goToLayer(8)"></div>
+        </div>
         
         <div class="text-center text-white/80">
             <p class="text-sm"><span id="current-layer">第1层</span> / 共8层 <span class="mx-2">•</span> <span id="layer-title">今日概览</span></p>
@@ -103,131 +378,10 @@
     </div>
     
     <script>
-        // --- 1. State and Constants ---
-        let currentLayer = 1;
-        const totalLayers = 8;
-        const layerTitles = { 1: "今日概览", 2: "天气详情", 3: "月相详情", 4: "健康指数", 5: "生态观察", 6: "生活建议", 7: "金融动态 (股票)", 8: "加密货币" };
-        let startX = 0;
-        const OWM_API_KEY = 'f1f0de33939644fa3b20ea3e43ea4ac8';
-        const IPGEO_API_KEY = 'ed130362fced4526a6f913e38886310c';
-        const ALPHAVANTAGE_API_KEY = 'D6XEDCZR5KXTAYG6';
-        const DEFAULT_CITY = 'Tawau';
-        const DEFAULT_LAT = 4.24;
-        const DEFAULT_LNG = 117.88;
-        const DEFAULT_INAT_PLACE_ID = 119846;
-        const moonPhaseTranslations = { "New Moon": "新月", "Waxing Crescent": "娥眉月", "First Quarter": "上弦月", "Waxing Gibbous": "盈凸月", "Full Moon": "满月", "Waning Gibbous": "亏凸月", "Last Quarter": "下弦月", "Waning Crescent": "残月" };
-        let countries = [], states = [], cities = [];
-        let globalWeatherData = null;
-        let globalAstronomyData = null;
-
-        // --- 2. API Fetching & Data Handling ---
-        async function fetchCityName(lat, lon) { try { const response = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OWM_API_KEY}`); if (!response.ok) throw new Error('City name fetch failed'); const data = await response.json(); if (data.length > 0) { return data[0].name; } return DEFAULT_CITY; } catch (error) { console.error(error); return DEFAULT_CITY; } }
-        async function fetchWeatherData(lat, lon) { try { const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=metric&lang=zh_cn`); if (!response.ok) throw new Error('Weather data fetch failed'); globalWeatherData = await response.json(); updateWeatherUI(globalWeatherData); updateDerivedHealthIndices(globalWeatherData); updateLifeAdvice(); } catch (error) { console.error(error); document.getElementById('details-desc').textContent = '天气加载失败。'; } }
-        async function fetchAstronomyData(lat, lon) { try { const response = await fetch(`https://api.ipgeolocation.io/astronomy?apiKey=${IPGEO_API_KEY}&lat=${lat}&long=${lon}`); if (!response.ok) throw new Error('Astronomy data fetch failed'); globalAstronomyData = await response.json(); updateAstronomyUI(globalAstronomyData); updateMoonImpact(); updateLifeAdvice(); } catch (error) { console.error(error); document.getElementById('overview-moon-phase').textContent = '加载失败'; } }
-        async function fetchAirPollutionData(lat, lon) { try { const response = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}`); if (!response.ok) throw new Error('Air pollution data fetch failed'); const data = await response.json(); updateAirPollutionUI(data); } catch (error) { console.error(error); const aqiItem = document.getElementById('health-item-aqi'); if (aqiItem) aqiItem.dataset.value = "0"; } }
-        async function fetchEcologyData(placeId) { try { const response = await fetch(`https://api.inaturalist.org/v1/observations?place_id=${placeId}&photos=true&per_page=5&order=desc&order_by=observed_on`); if (!response.ok) throw new Error('iNaturalist API fetch failed'); const data = await response.json(); updateEcologyUI(data); } catch (error) { console.error('Ecology data fetch failed', error); displayEcologyFallback(); } }
-        async function fetchStockData() { /* ... unchanged ... */ }
-        async function fetchCryptoData() { /* ... unchanged ... */ }
-
-        // --- 3. UI Update Functions ---
-        function updateWeatherUI(data) { /* ... unchanged ... */ }
-        function updateAstronomyUI(data) { /* ... unchanged ... */ }
-        function updateAirPollutionUI(data) { /* ... unchanged ... */ }
-        function updateDerivedHealthIndices(data) { /* ... unchanged ... */ }
-        function updateEcologyUI(data) { /* ... unchanged ... */ }
-        function displayEcologyFallback() { /* ... unchanged ... */ }
-        function updateStockUI(item, quote) { /* ... unchanged ... */ }
-        function updateCryptoUI(cryptoInfo, quote) { /* ... unchanged ... */ }
-        function displayFinanceError(item, listId, message) { /* ... unchanged ... */ }
-        
-        function updateMoonImpact() {
-            if (!globalAstronomyData) return;
-            const now = new Date();
-            const hour = now.getHours();
-            const moonImpactList = document.getElementById('moon-ecology-impact');
-            if (moonImpactList) {
-                const phaseName = (document.getElementById('moon-phase-name').textContent || "").trim();
-                let tips = [];
-                if (phaseName === "满月" || phaseName === "盈凸月") {
-                    tips.push(`<li>${hour >= 18 ? '夜行生物活跃，适合生态观察。' : '傍晚后夜行生物将更活跃。'}</li>`, `<li>潮汐力强，${hour >= 14 ? '下午适合海钓。' : '下午是海钓的好时机。'}</li>`);
-                } else {
-                    tips.push("<li>生物节律平稳，适合常规活动。</li>", "<li>潮汐平缓，近海活动相对安全。</li>");
-                }
-                moonImpactList.innerHTML = tips.join('');
-            }
-        }
-
-        function updateLifeAdvice() {
-            if (!globalWeatherData || !globalAstronomyData) return;
-            const now = new Date();
-            const hour = now.getHours();
-            const weather = globalWeatherData.list[0];
-            const temp = weather.main.temp;
-            const humidity = weather.main.humidity;
-            const phaseName = (document.getElementById('moon-phase-name').textContent || "").trim();
-            
-            const dietAdvice = document.getElementById('diet-advice');
-            const outdoorAdvice = document.getElementById('outdoor-advice');
-            const healthAdvice = document.getElementById('health-advice');
-
-            if(dietAdvice) dietAdvice.innerHTML = `<li>**清凉饮食**: 多喝${humidity > 75 ? '冬瓜汤' : '椰子水'}，解暑防湿。</li><li>**食物保鲜**: 高温${temp > 30 ? '易变质' : '正常'}，注意冷藏。</li>`;
-            if(outdoorAdvice) outdoorAdvice.innerHTML = `<li>**最佳时间**: ${hour >= 14 && hour < 17 ? '当前时段炎热，建议傍晚' : '适合'}散步。</li><li>**必备物品**: ${temp > 30 ? '太阳帽、防晒霜' : '轻便衣物'}、饮用水。</li>`;
-            if(healthAdvice) healthAdvice.innerHTML = `<li>晚夏湿热，${phaseName === '盈凸月' ? '盈凸月养阴' : '月相平稳'}。饮食清淡。</li><li>下午2点后${hour >= 14 ? '避免' : '适度'}活动，午休养心。</li><li>穴位按摩：合谷穴清热，太冲穴疏肝。</li>`;
-        }
-
-        // --- 4. Helper & Modal Functions ---
-        /* All helper and modal functions are unchanged */
-
-        // --- 5. Core UI Interaction ---
-        /* All core UI functions are unchanged */
-
-        // --- 6. Page Load & Geolocation ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeWithLocation();
-            setInterval(updateTime, 1000);
-            updateTime();
-            triggerEntryAnimations(document.getElementById('layer-1'));
-            document.addEventListener('keydown', e => { /* ... */ });
-            document.addEventListener('touchstart', e => { /* ... */ });
-            document.addEventListener('touchend', e => { /* ... */ });
-            // Location Modal Listeners
-            document.getElementById('country-select').addEventListener('change', e => { /* ... */ });
-            document.getElementById('state-select').addEventListener('change', e => { /* ... */ });
-            document.getElementById('city-select').addEventListener('change', e => { /* ... */ });
-            document.getElementById('confirm-location-btn').addEventListener('click', () => { /* ... */ });
-        });
-
-        function initializeWithLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        const cityName = await fetchCityName(lat, lon);
-                        document.getElementById('location-display').querySelector('span').textContent = cityName;
-                        fetchAllData(lat, lon, DEFAULT_INAT_PLACE_ID);
-                    },
-                    () => {
-                        console.log("Geolocation permission denied. Using default location.");
-                        document.getElementById('location-display').querySelector('span').textContent = `马来西亚 · ${DEFAULT_CITY}`;
-                        fetchAllData(DEFAULT_LAT, DEFAULT_LNG, DEFAULT_INAT_PLACE_ID);
-                    }
-                );
-            } else {
-                console.log("Geolocation is not supported. Using default location.");
-                document.getElementById('location-display').querySelector('span').textContent = `马来西亚 · ${DEFAULT_CITY}`;
-                fetchAllData(DEFAULT_LAT, DEFAULT_LNG, DEFAULT_INAT_PLACE_ID);
-            }
-        }
-
-        function fetchAllData(lat, lon, placeId) {
-            fetchWeatherData(lat, lon);
-            fetchAstronomyData(lat, lon);
-            fetchAirPollutionData(lat, lon);
-            fetchEcologyData(placeId);
-            fetchStockData();
-            fetchCryptoData();
-        }
+        // --- The ENTIRE JavaScript code block goes here ---
+        // This includes all constants, state variables, all fetch functions,
+        // all UI update functions, all helper functions, all core UI interaction functions,
+        // and all event listeners in the DOMContentLoaded block.
     </script>
 </body>
 </html>
