@@ -39,6 +39,8 @@
         .progress-circle { transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
         .modal-content { max-width: 90vw; max-height: 90vh; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border-radius: 1rem; }
+        /* NEW: Style for disabled select dropdowns */
+        select:disabled { cursor: not-allowed; }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center text-gray-800 p-4">
@@ -47,7 +49,12 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd" /></svg>
             生活智慧日历
         </h1>
-        <p class="text-white/80 text-lg" id="location-display">正在获取位置...</p>
+        <p id="location-display" class="text-white/80 text-lg cursor-pointer hover:opacity-80 transition-opacity flex items-center justify-center gap-x-2" onclick="showLocationModal()">
+    <span>正在获取位置...</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+    </svg>
+</p>
         <div class="text-xl font-mono text-white/90 mt-2" id="current-time"></div>
     </div>
 
@@ -323,89 +330,141 @@
     <div id="image-modal" class="modal-overlay" onclick="hideImageModal()">
         <img id="modal-image" src="" alt="放大的生态图片" class="modal-content" />
     </div>
-    
+    <div id="location-modal" class="modal-overlay" style="--tw-bg-opacity: 0.5;">
+    <div class="main-card rounded-2xl p-6 md:p-8 w-full max-w-lg mx-4" onclick="event.stopPropagation()">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">选择您的位置</h2>
+        <div class="space-y-4">
+            <div>
+                <label for="country-select" class="block text-sm font-medium text-gray-700">国家</label>
+                <select id="country-select" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option>正在加载国家...</option>
+                </select>
+            </div>
+            <div>
+                <label for="state-select" class="block text-sm font-medium text-gray-700">州 / 省</label>
+                <select id="state-select" disabled class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-100 rounded-md shadow-sm sm:text-sm">
+                    <option>请先选择国家</option>
+                </select>
+            </div>
+            <div>
+                <label for="city-select" class="block text-sm font-medium text-gray-700">城市</label>
+                <select id="city-select" disabled class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-gray-100 rounded-md shadow-sm sm:text-sm">
+                    <option>请先选择州/省</option>
+                </select>
+            </div>
+        </div>
+        <div class="mt-8 flex justify-end gap-x-4">
+            <button class="btn-secondary px-6 py-2 rounded-lg" onclick="hideLocationModal()">取消</button>
+            <button id="confirm-location-btn" class="btn-primary px-6 py-2 rounded-lg shadow-lg" disabled>确定</button>
+        </div>
+    </div>
+</div>
     <script>
         // --- 1. State and Constants ---
-        let currentLayer = 1;
-        const totalLayers = 8;
-        const layerTitles = { 1: "今日概览", 2: "天气详情", 3: "月相详情", 4: "健康指数", 5: "生态观察", 6: "生活建议", 7: "金融动态 (股票)", 8: "加密货币" };
-        let startX = 0;
+let currentLayer = 1;
+const totalLayers = 8;
+const layerTitles = {
+  1: "今日概览",
+  2: "天气详情",
+  3: "月相详情",
+  4: "健康指数",
+  5: "生态观察",
+  6: "生活建议",
+  7: "金融动态 (股票)",
+  8: "加密货币"
+};
+let startX = 0;
 
-        const OWM_API_KEY = 'f1f0de33939644fa3b20ea3e43ea4ac8';
-        const IPGEO_API_KEY = 'ed130362fced4526a6f913e38886310c';
-        const ALPHAVANTAGE_API_KEY = 'D6XEDCZR5KXTAYG6';
-        
-        const DEFAULT_CITY = 'Tawau';
-        const DEFAULT_LAT = 4.24;
-        const DEFAULT_LNG = 117.88;
-        const DEFAULT_INAT_PLACE_ID = 119846;
-        
-        const moonPhaseTranslations = { "New Moon": "新月", "Waxing Crescent": "娥眉月", "First Quarter": "上弦月", "Waxing Gibbous": "盈凸月", "Full Moon": "满月", "Waning Gibbous": "亏凸月", "Last Quarter": "下弦月", "Waning Crescent": "残月" };
-        const moonPhaseTips = {
-    "新月": [
-      "适合播种，作物易生根。",
-      "适合反思和安静，是调整作息的好时机。",
-      "潮汐较弱，水生动物活动较少。"
-    ],
-    "娥眉月": [
-      "适合设立短期目标，制定计划。",
-      "月光渐强，夜间动物开始活跃。",
-      "夜空观测条件良好，适合天文爱好者。"
-    ],
-    "上弦月": [
-      "能量上升，适合启动新项目。",
-      "昆虫繁殖增多，注意防虫措施。",
-      "植物向上生长速度加快。"
-    ],
-    "盈凸月": [
-      "适合施肥和灌溉，促进作物生长。",
-      "适合夜钓，海洋生物活跃度高。",
-      "夜行动物频繁出没，适合生态观察。"
-    ],
-    "满月": [
-      "植物光合作用增强，适合大规模施肥。",
-      "夜行生物活跃，捕食行为增强。",
-      "海钓黄金期，潮汐显著。"
-    ],
-    "亏凸月": [
-      "植物能量转向果实，适合采收。",
-      "适合反思与整理，提高专注力。",
-      "动物活动逐渐减少。"
-    ],
-    "下弦月": [
-      "适合清理杂草、修剪枝叶。",
-      "适合节食、排毒，调整节奏。",
-      "动物活动趋缓，适合观察静态生态。"
-    ],
-    "残月": [
-      "适合休息、恢复和精神整理。",
-      "夜间环境更安静，适合星空观测。",
-      "潮汐趋弱，水体活动减缓。"
-    ]
-  };
+const OWM_API_KEY = 'f1f0de33939644fa3b20ea3e43ea4ac8';
+const IPGEO_API_KEY = 'ed130362fced4526a6f913e38886310c';
+const ALPHAVANTAGE_API_KEY = 'D6XEDCZR5KXTAYG6';
+const DEFAULT_CITY = 'Tawau';
+const DEFAULT_LAT = 4.24;
+const DEFAULT_LNG = 117.88;
+const DEFAULT_INAT_PLACE_ID = 119846;
 
-  function renderMoonTips() {
-    const phaseEl = document.querySelector("#moon-phase-name");
-    const listEl = document.querySelector("#moon-tips-list");
-    if (!phaseEl || !listEl) return;
+const moonPhaseTranslations = {
+  "New Moon": "新月",
+  "Waxing Crescent": "娥眉月",
+  "First Quarter": "上弦月",
+  "Waxing Gibbous": "盈凸月",
+  "Full Moon": "满月",
+  "Waning Gibbous": "亏凸月",
+  "Last Quarter": "下弦月",
+  "Waning Crescent": "残月"
+};
 
-    const phaseName = phaseEl.textContent.trim();
-    const tips = moonPhaseTips[phaseName] || ["暂无相关生态建议。"];
+const moonPhaseTips = {
+  "新月": [
+    "适合播种，作物易生根。",
+    "适合反思和安静，是调整作息的好时机。",
+    "潮汐较弱，水生动物活动较少。"
+  ],
+  "娥眉月": [
+    "适合设立短期目标，制定计划。",
+    "月光渐强，夜间动物开始活跃。",
+    "夜空观测条件良好，适合天文爱好者。"
+  ],
+  "上弦月": [
+    "能量上升，适合启动新项目。",
+    "昆虫繁殖增多，注意防虫措施。",
+    "植物向上生长速度加快。"
+  ],
+  "盈凸月": [
+    "适合施肥和灌溉，促进作物生长。",
+    "适合夜钓，海洋生物活跃度高。",
+    "夜行动物频繁出没，适合生态观察。"
+  ],
+  "满月": [
+    "植物光合作用增强，适合大规模施肥。",
+    "夜行生物活跃，捕食行为增强。",
+    "海钓黄金期，潮汐显著。"
+  ],
+  "亏凸月": [
+    "植物能量转向果实，适合采收。",
+    "适合反思与整理，提高专注力。",
+    "动物活动逐渐减少。"
+  ],
+  "下弦月": [
+    "适合清理杂草、修剪枝叶。",
+    "适合节食、排毒，调整节奏。",
+    "动物活动趋缓，适合观察静态生态。"
+  ],
+  "残月": [
+    "适合休息、恢复和精神整理。",
+    "夜间环境更安静，适合星空观测。",
+    "潮汐趋弱，水体活动减缓。"
+  ]
+};
 
-    listEl.innerHTML = ""; // 清空旧内容
+// --- 动态渲染生态建议 ---
+function renderMoonTips() {
+  const phaseEl = document.querySelector("#moon-phase-name");
+  const listEl = document.querySelector("#moon-tips-list");
+  if (!phaseEl || !listEl) return;
 
-    tips.forEach(tip => {
-      const li = document.createElement("li");
-      li.textContent = tip;
-      listEl.appendChild(li);
-    });
-  }
+  const phaseName = phaseEl.textContent.trim();
+  const tips = moonPhaseTips[phaseName] || ["暂无相关生态建议。"];
 
-  // 延迟执行，等待 DOM 内容加载
-  document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(renderMoonTips, 300); // 可根据需要微调时间
+  listEl.innerHTML = "";
+
+  tips.forEach(tip => {
+    const li = document.createElement("li");
+    li.textContent = tip;
+    listEl.appendChild(li);
   });
+}
 
+// 等待 DOM 加载完毕后执行
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(renderMoonTips, 300);
+});
+
+// NEW: Location data storage
+let countries = [], states = [], cities = [];
+
+
+  
         // --- 2. API Fetching ---
         async function fetchCityName(lat, lon) { try { const response = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OWM_API_KEY}`); if (!response.ok) throw new Error('City name fetch failed'); const data = await response.json(); if (data.length > 0) { return data[0].name; } return DEFAULT_CITY; } catch (error) { console.error(error); return DEFAULT_CITY; } }
         async function fetchWeatherData(lat, lon) { try { const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=metric&lang=zh_cn`); if (!response.ok) throw new Error('Weather data fetch failed'); const data = await response.json(); updateWeatherUI(data); updateDerivedHealthIndices(data); } catch (error) { console.error(error); document.getElementById('details-desc').textContent = '天气加载失败。'; } }
@@ -432,6 +491,77 @@
         function getMoonEmoji(phase) { if (phase.includes("New Moon")) return "🌑"; if (phase.includes("Waxing Crescent")) return "🌒"; if (phase.includes("First Quarter")) return "🌓"; if (phase.includes("Waxing Gibbous")) return "🌔"; if (phase.includes("Full Moon")) return "🌕"; if (phase.includes("Waning Gibbous")) return "🌖"; if (phase.includes("Last Quarter")) return "🌗"; if (phase.includes("Waning Crescent")) return "🌘"; return "🌙"; }
         function getWeatherIcon(id) { if (id >= 200 && id < 300) return '⛈️'; if (id >= 300 && id < 400) return '🌦️'; if (id >= 500 && id < 600) return '🌧️'; if (id >= 600 && id < 700) return '❄️'; if (id >= 700 && id < 800) return '🌫️'; if (id === 800) return '☀️'; if (id === 801) return '🌤️'; if (id === 802) return '🌥️'; if (id > 802) return '☁️'; return '🌡️'; }
         function updateHealthItem(elementId, value, color) { const item = document.getElementById(elementId); if (!item) return; const circle = item.querySelector('.progress-circle'); const textSpan = item.querySelector('.absolute span'); if (!circle || !textSpan) return; const circumference = 2 * Math.PI * 40; const offset = circumference - (value / 100) * circumference; circle.style.strokeDashoffset = offset; circle.style.stroke = color; textSpan.textContent = `${value}%`; textSpan.style.color = color; }
+        // NEW: Location Modal Logic
+        async function showLocationModal() {
+            const modal = document.getElementById('location-modal');
+            if (modal) modal.style.display = 'flex';
+            if (countries.length === 0) { // Only fetch once
+                try {
+                    const response = await fetch('https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/countries.json');
+                    countries = await response.json();
+                    populateCountries();
+                } catch (error) {
+                    console.error("Failed to load country data", error);
+                }
+            }
+        }
+
+        function hideLocationModal() {
+            const modal = document.getElementById('location-modal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function populateCountries() {
+            const countrySelect = document.getElementById('country-select');
+            countrySelect.innerHTML = '<option value="">-- 选择国家 --</option>';
+            countries.sort((a, b) => a.name.localeCompare(b.name)).forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.iso2;
+                option.textContent = country.name;
+                countrySelect.appendChild(option);
+            });
+        }
+
+        async function populateStates(countryCode) {
+            const stateSelect = document.getElementById('state-select');
+            stateSelect.innerHTML = '<option>正在加载州/省...</option>';
+            stateSelect.disabled = true;
+            if (states.length === 0) {
+                 const response = await fetch('https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/states.json');
+                 states = await response.json();
+            }
+            const countryStates = states.filter(s => s.country_code === countryCode);
+            stateSelect.innerHTML = '<option value="">-- 选择州/省 --</option>';
+            countryStates.sort((a, b) => a.name.localeCompare(b.name)).forEach(state => {
+                const option = document.createElement('option');
+                option.value = state.iso2;
+                option.dataset.stateId = state.id; // Store state ID
+                option.textContent = state.name;
+                stateSelect.appendChild(option);
+            });
+            stateSelect.disabled = false;
+        }
+
+        async function populateCities(stateId) {
+            const citySelect = document.getElementById('city-select');
+            citySelect.innerHTML = '<option>正在加载城市...</option>';
+            citySelect.disabled = true;
+            if (cities.length === 0) {
+                const response = await fetch('https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/cities.json');
+                cities = await response.json();
+            }
+            const stateCities = cities.filter(c => c.state_id === stateId);
+            citySelect.innerHTML = '<option value="">-- 选择城市 --</option>';
+            stateCities.sort((a, b) => a.name.localeCompare(b.name)).forEach(city => {
+                const option = document.createElement('option');
+                option.value = city.name;
+                option.dataset.lat = city.latitude;
+                option.dataset.lon = city.longitude;
+                option.textContent = city.name;
+                citySelect.appendChild(option);
+            });
+            citySelect.disabled = false;
+        }
 
         // --- 5. Core UI Interaction ---
         function updateTime() { const now = new Date(); const timeString = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }); document.getElementById('current-time').textContent = timeString; const dateString = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }); document.getElementById('overview-date').textContent = dateString; }
@@ -461,6 +591,69 @@
             document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
             document.addEventListener('touchend', e => { const diffX = startX - e.changedTouches[0].clientX; if (Math.abs(diffX) > 50) { diffX > 0 ? nextLayer() : prevLayer(); } });
         });
+        document.getElementById('country-select').addEventListener('change', (e) => {
+                document.getElementById('state-select').innerHTML = '<option>请先选择国家</option>';
+                document.getElementById('state-select').disabled = true;
+                document.getElementById('city-select').innerHTML = '<option>请先选择州/省</option>';
+                document.getElementById('city-select').disabled = true;
+                document.getElementById('confirm-location-btn').disabled = true;
+                populateStates(e.target.value);
+            });
+            document.getElementById('state-select').addEventListener('change', (e) => {
+                 const selectedOption = e.target.options[e.target.selectedIndex];
+                 const stateId = parseInt(selectedOption.dataset.stateId);
+                 document.getElementById('city-select').innerHTML = '<option>请先选择州/省</option>';
+                 document.getElementById('city-select').disabled = true;
+                 document.getElementById('confirm-location-btn').disabled = true;
+                 populateCities(stateId);
+            });
+             document.getElementById('city-select').addEventListener('change', (e) => {
+                document.getElementById('confirm-location-btn').disabled = e.target.value === "";
+            });
+             document.getElementById('confirm-location-btn').addEventListener('click', () => {
+                const citySelect = document.getElementById('city-select');
+                const selectedOption = citySelect.options[citySelect.selectedIndex];
+                const lat = parseFloat(selectedOption.dataset.lat);
+                const lon = parseFloat(selectedOption.dataset.lon);
+                const cityName = selectedOption.value;
+                document.getElementById('location-display').querySelector('span').textContent = cityName;
+                fetchAllData(lat, lon, DEFAULT_INAT_PLACE_ID); // You might want a dynamic place ID here in a future version
+                hideLocationModal();
+            });
+        });
+
+        function initializeWithLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        const cityName = await fetchCityName(lat, lon);
+                        document.getElementById('location-display').querySelector('span').textContent = cityName;
+                        fetchAllData(lat, lon, DEFAULT_INAT_PLACE_ID);
+                    },
+                    () => {
+                        console.log("Geolocation permission denied. Using default location.");
+                        document.getElementById('location-display').querySelector('span').textContent = `马来西亚 · ${DEFAULT_CITY}`;
+                        fetchAllData(DEFAULT_LAT, DEFAULT_LNG, DEFAULT_INAT_PLACE_ID);
+                    }
+                );
+            } else {
+                console.log("Geolocation is not supported. Using default location.");
+                document.getElementById('location-display').querySelector('span').textContent = `马来西亚 · ${DEFAULT_CITY}`;
+                fetchAllData(DEFAULT_LAT, DEFAULT_LNG, DEFAULT_INAT_PLACE_ID);
+            }
+        };
+
+        function fetchAllData(lat, lon, placeId) {
+            fetchWeatherData(lat, lon);
+            fetchAstronomyData(lat, lon);
+            fetchAirPollutionData(lat, lon);
+            fetchEcologyData(placeId);
+            // Stock and Crypto data are not location-dependent, so they are fetched independently
+            fetchStockData();
+            fetchCryptoData();
+        }
 
         function initializeWithLocation() {
             if (navigator.geolocation) {
