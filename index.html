@@ -6,6 +6,7 @@
     <title>生活智慧日历</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
         
         body {
@@ -396,6 +397,86 @@
         let globalAstronomyData = null;
 
         // --- 2. API Fetching ---
+        // 首先，在脚本的顶部（常量区）初始化Supabase客户端
+const SUPABASE_URL = 'https://exmfareyaysyvicxyekc.supabase.co';      // 从您的Supabase后台API设置中获取
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4bWZhcmV5YXlzeXZpY3h5ZWtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NDQ4NDUsImV4cCI6MjA3MDAyMDg0NX0.9Pvq56Yee_6TbWjfqrtWb1crIupumw_F8Ts6gLSZMnM'; // 从您的Supabase后台API设置中获取
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 删除旧的 let countries = [], states = [], cities = []; 变量
+
+// 重写获取国家、州、城市的函数
+async function populateCountries() {
+    const countrySelect = document.getElementById('country-select');
+    countrySelect.innerHTML = '<option value="">-- 选择国家 --</option>';
+
+    const { data: countries, error } = await supabase.from('countries').select('name, iso2').order('name');
+
+    if (error) {
+        console.error('Error fetching countries:', error);
+        return;
+    }
+
+    countries.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country.iso2;
+        option.textContent = country.name;
+        countrySelect.appendChild(option);
+    });
+}
+
+async function populateStates(countryCode) {
+    const stateSelect = document.getElementById('state-select');
+    stateSelect.innerHTML = '<option>正在加载州/省...</option>';
+    stateSelect.disabled = true;
+
+    const { data: states, error } = await supabase.from('states').select('name, id').eq('country_code', countryCode).order('name');
+
+    if (error) {
+        console.error('Error fetching states:', error);
+        return;
+    }
+
+    stateSelect.innerHTML = '<option value="">-- 选择州/省 --</option>';
+    states.forEach(state => {
+        const option = document.createElement('option');
+        option.value = state.id; // 使用 state id 作为 value
+        option.textContent = state.name;
+        stateSelect.appendChild(option);
+    });
+    stateSelect.disabled = false;
+}
+
+async function populateCities(stateId) {
+    const citySelect = document.getElementById('city-select');
+    citySelect.innerHTML = '<option>正在加载城市...</option>';
+    citySelect.disabled = true;
+
+    const { data: cities, error } = await supabase.from('cities').select('name, latitude, longitude').eq('state_id', stateId).order('name');
+
+    if (error) {
+        console.error('Error fetching cities:', error);
+        return;
+    }
+
+    citySelect.innerHTML = '<option value="">-- 选择城市 --</option>';
+    cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city.name;
+        option.dataset.lat = city.latitude;
+        option.dataset.lon = city.longitude;
+        option.textContent = city.name;
+        citySelect.appendChild(option);
+    });
+    citySelect.disabled = false;
+}
+
+// 在 showLocationModal 中，不再需要检查 countries.length
+async function showLocationModal() {
+    const modal = document.getElementById('location-modal');
+    if (modal) modal.style.display = 'flex';
+    // 每次打开都重新加载国家列表，或者可以加入缓存逻辑
+    populateCountries();
+}
         async function fetchCityName(lat, lon) { try { const response = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OWM_API_KEY}`); if (!response.ok) throw new Error('City name fetch failed'); const data = await response.json(); if (data.length > 0) { return data[0].name; } return DEFAULT_CITY; } catch (error) { console.error(error); return DEFAULT_CITY; } }
         async function fetchWeatherData(lat, lon) { try { const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=metric&lang=zh_cn`); if (!response.ok) throw new Error('Weather data fetch failed'); globalWeatherData = await response.json(); updateWeatherUI(globalWeatherData); updateDerivedHealthIndices(globalWeatherData); updateLifeAdvice(); } catch (error) { console.error(error); document.getElementById('details-desc').textContent = '天气加载失败。'; } }
         async function fetchAstronomyData(lat, lon) { try { const response = await fetch(`https://api.ipgeolocation.io/astronomy?apiKey=${IPGEO_API_KEY}&lat=${lat}&long=${lon}`); if (!response.ok) throw new Error('Astronomy data fetch failed'); globalAstronomyData = await response.json(); updateAstronomyUI(globalAstronomyData); updateMoonImpact(); updateLifeAdvice(); } catch (error) { console.error(error); document.getElementById('overview-moon-phase').textContent = '加载失败'; } }
